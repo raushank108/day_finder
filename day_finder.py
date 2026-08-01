@@ -1,0 +1,128 @@
+from tkinter import *
+from tkinter import messagebox
+
+#--------------------------For Leap Year Function-------------------------------
+
+def leap_year_day(day,month,year):
+    day_count=0
+    month_name= [ "January","February","March","April","May","June","July",
+    "August","September","October","November","December",]
+    
+    day_name=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday']
+    month_code=[0,3,4,0,2,5,0,3,6,1,4,6]
+    year_code=[6,4,2,0]
+    last_two_digit_of_year=year%100
+    rem=(year//100)%4
+    day_count+=((day%7)+month_code[month-1]+year_code[rem]+
+                (last_two_digit_of_year%7)+
+                (last_two_digit_of_year//4))%7
+    
+#------------------ Formatting------------------------- 
+    result_text = ( f"Day:        {day_name[day_count]}\n"
+       f"Date:       {day:02d}/{month:02d}/{year}\n"
+       f"Month:      {month_name[month-1]}\n"
+       f"Year:         {year}\n"
+       f"Leap Year:  Yes")
+    result_label.config(text=result_text, fg="green", justify="left")
+
+#---------------------------For Non Leap Year ------------------------------
+    
+def non_leap_year_day(day,month,year):
+    day_count=0
+    month_name= [ "January","February","March","April","May","June","July",
+    "August","September","October","November","December",]
+    
+    day_name=['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday']
+    month_code=[1,4,4,0,2,5,0,3,6,1,4,6]
+    year_code=[6,4,2,0]
+    last_two_digit_of_year=year%100
+    rem=(year//100)%4
+    day_count+=((day%7)+month_code[month-1]+year_code[rem]+
+                (last_two_digit_of_year%7)+
+                (last_two_digit_of_year//4))%7
+     
+    #------------------ Formatting------------------------- 
+    result_text = ( f"Day:        {day_name[day_count]}\n"
+       f"Date:       {day:02d}/{month:02d}/{year}\n"
+       f"Month:      {month_name[month-1]}\n"
+       f"Year:         {year}\n"
+       f"Leap Year:  No")
+    result_label.config(text=result_text, fg="green", justify="left")
+#-----------------------Main function to take input and check is data valid or not--------------
+def day_finder():
+    try:
+         date=entry.get()
+         day,month,year=map(int,date.split("/"))
+         if day<1 or day>31 or month<1 or month>12:
+             raise ValueError
+         if month in [4,6,9,11] and day>30:
+                     raise ValueError
+         if year%100==0:
+             if year%400==0:
+                 if  month==2 and day>29:
+                     raise ValueError
+                 
+                                     
+                 leap_year_day(day,month,year)
+             else:
+                  if  month==2 and day>28:
+                     raise ValueError
+                  non_leap_year_day(day,month,year)
+                 
+
+         else:
+             if year%4==0:
+                  if  month==2 and day>29:
+                     raise ValueError
+                  leap_year_day(day,month,year)
+             else:
+                  if  month==2 and day>28:
+                     raise ValueError
+                  non_leap_year_day(day,month,year)
+    except ValueError:
+        messagebox.showerror("Error","Enter date in DD/MM/YYYY  format \n or Correct Valid Date.")
+
+#-------------------for clear  the given data-----------------------------
+def clear():
+    entry.delete(0,END)
+    result_label.config(text="")
+
+#-----------------------------Main GUI -----------------------------------
+    
+root=Tk()
+root.title("Day Finder")
+root.geometry("750x500")
+root.configure(bg="white")
+label=Label(root,text="DAY OF THE WEEK FINDER",font=("Arial",18,"bold"),bg="white",fg="blue")
+label.pack(pady=15)
+
+Label(root,text="Enter Date(DD/MM/YYYY ",font=("Arial",14),bg="white").pack()
+entry=Entry(root,font=("Arial",16),width=20,justify="center")
+entry.pack(pady=10)
+Button(root,text="Find Day ",font=("Arial",14,"bold"),bg="blue",fg="white",
+       command=day_finder).pack()
+Button(root,text="Clear",font=("Arial",14),command=clear).pack(pady=5)
+root.bind("<Return>",lambda event:day_finder())
+result_label=Label(root,text="",font=("Arial",18,"bold"),bg="white",fg="green")
+result_label.pack(pady=20)
+
+root.mainloop()
+
+
+
+
+           
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
